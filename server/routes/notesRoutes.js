@@ -120,6 +120,10 @@ router.get('/download/:id', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'File no longer exists on the server' });
     }
 
+    await Notes.findByIdAndUpdate(note._id, {
+      $inc: { downloadCount: 1 },
+    });
+
     return res.download(absolutePath, note.fileName);
   } catch (error) {
     return res.status(500).json({ message: 'Download failed', error: error.message });

@@ -7,6 +7,7 @@ import {
   FaShieldHalved,
   FaClock,
   FaDatabase,
+  FaBolt,
 } from 'react-icons/fa6';
 import Navbar from '../components/Navbar';
 
@@ -17,26 +18,23 @@ function Home() {
       <main className="container page">
         <section className="hero">
           <div className="hero-copy">
-            <p className="eyebrow">MERN Notes Exchange</p>
-            <h1>Academic Notes, Organized and Shared</h1>
+            <p className="eyebrow">NoteHub</p>
+            <h1>Study Smarter with Shared Academic Notes</h1>
             <p>
-              A production-ready MERN platform where students can securely upload, discover, and download
-              study materials by title and subject.
+              Built for students who want fast access to quality materials. Upload notes, discover content by
+              subject, and keep everything organized in one place.
             </p>
 
-            <div className="metrics-row">
-              <div className="metric-chip">
-                <strong>24/7</strong>
-                <span>Availability</span>
-              </div>
-              <div className="metric-chip">
-                <strong>10MB</strong>
-                <span>Per File Limit</span>
-              </div>
-              <div className="metric-chip">
-                <strong>JWT</strong>
-                <span>Secured Access</span>
-              </div>
+            <div className="hero-points">
+              <span>
+                <FaBolt /> Fast onboarding
+              </span>
+              <span>
+                <FaShieldHalved /> Secure user access
+              </span>
+              <span>
+                <FaMagnifyingGlass /> Powerful search
+              </span>
             </div>
 
             <div className="cta-row">

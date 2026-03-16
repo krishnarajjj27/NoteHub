@@ -1,10 +1,10 @@
 {
-  "name": "notes-sharing-client",
+  "name": "notehub-client",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "axios": "^1.7.7",
-    "mern-notes-sharing-platform": "file:..",
+    "notehub": "file:..",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",

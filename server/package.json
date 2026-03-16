@@ -1,7 +1,7 @@
 {
-  "name": "notes-sharing-server",
+  "name": "notehub-server",
   "version": "1.0.0",
-  "description": "Backend for Notes Sharing Platform",
+  "description": "Backend for NoteHub",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -15,10 +15,11 @@
     "express-rate-limit": "^7.4.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mern-notes-sharing-platform": "file:..",
     "mongoose": "^8.7.3",
     "morgan": "^1.10.0",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "nodemailer": "^6.9.15",
+    "notehub": "file:.."
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

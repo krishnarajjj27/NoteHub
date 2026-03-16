@@ -162,6 +162,26 @@ a {
   max-width: 58ch;
 }
 
+.hero-points {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.hero-points span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #d8e4f8;
+  background: #f7faff;
+  color: #214573;
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .metrics-row {
   margin-top: 1.2rem;
   display: flex;
@@ -367,13 +387,58 @@ a {
   place-items: center;
 }
 
+.auth-shell {
+  width: min(980px, 100%);
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
 .auth-card {
-  width: min(500px, 100%);
+  width: 100%;
   background: rgba(255, 255, 255, 0.94);
   border-radius: 18px;
   border: 1px solid #dbe4f2;
   box-shadow: var(--card-shadow);
   padding: 1.4rem;
+}
+
+.auth-side-panel {
+  border-radius: 18px;
+  border: 1px solid #dbe6ff;
+  background:
+    linear-gradient(155deg, rgba(4, 36, 84, 0.97), rgba(5, 67, 152, 0.92)),
+    radial-gradient(circle at 75% 10%, rgba(13, 148, 136, 0.25), transparent 35%);
+  color: #eff5ff;
+  box-shadow: var(--glow);
+  padding: 1.2rem;
+}
+
+.auth-side-panel h3 {
+  margin: 0 0 0.7rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+}
+
+.auth-side-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  border: 1px solid rgba(221, 233, 255, 0.2);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.62rem 0.7rem;
+  margin-top: 0.55rem;
+}
+
+.auth-side-item svg {
+  color: #86c7ff;
+}
+
+.auth-side-item span {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .auth-card h2 {
@@ -458,6 +523,12 @@ textarea:focus {
 .block-btn {
   width: 100%;
   margin-top: 0.85rem;
+}
+
+.inline-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .helper-text {
@@ -565,6 +636,80 @@ textarea:focus {
   gap: 0.4rem;
 }
 
+.download-count {
+  font-weight: 700;
+  color: #0f5f8f;
+}
+
+.top-notes-panel {
+  margin: 1rem 0 0.25rem;
+  border: 1px solid #d8e4f6;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f7faff 0%, #ffffff 100%);
+  padding: 0.9rem;
+}
+
+.top-notes-head h3 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #104a96;
+  font-size: 0.98rem;
+  font-family: 'Sora', sans-serif;
+}
+
+.top-notes-list {
+  margin-top: 0.7rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.top-note-item {
+  border: 1px solid #dfe8f7;
+  border-radius: 11px;
+  background: #ffffff;
+  padding: 0.5rem 0.65rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.top-note-rank {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #0b4aa5;
+  background: #e5efff;
+}
+
+.top-note-copy p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.top-note-copy span {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.top-note-downloads {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #0f5f8f;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
 .download-btn {
   width: 100%;
   border-color: #bde9dc;
@@ -575,6 +720,58 @@ textarea:focus {
 .download-btn:hover {
   background: #d8f7ed;
   border-color: #99dcc8;
+}
+
+.note-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.bookmark-btn {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d6def0;
+  background: #f8faff;
+  color: #0f3f8c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 0.65rem 0.75rem;
+  cursor: pointer;
+}
+
+.bookmark-btn:hover {
+  background: #eef4ff;
+  border-color: #bcd2fb;
+}
+
+.bookmark-btn.active {
+  border-color: #f7c45e;
+  background: #fff8e5;
+  color: #8a5b00;
+}
+
+.bookmark-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.saved-note-summary {
+  margin-top: 1rem;
+  border: 1px dashed #cedcf5;
+  border-radius: 12px;
+  background: #f8fbff;
+  color: #2a4d86;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.8rem;
 }
 
 @keyframes revealUp {
@@ -596,7 +793,8 @@ textarea:focus {
 
   .highlights-grid,
   .grid-two,
-  .dashboard-head {
+  .dashboard-head,
+  .auth-shell {
     grid-template-columns: 1fr;
   }
 }
@@ -634,5 +832,9 @@ textarea:focus {
 
   .metric-chip {
     min-width: 106px;
+  }
+
+  .note-actions {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,10 +1,11 @@
-# Notes Sharing Platform using MERN Stack
+# NoteHub
 
 A full-stack mini project where students can register, login, upload notes, search notes by title/subject, and download files.
 
 ## Features
 
 - User registration and login with JWT authentication
+- Email verification with 6-digit OTP code
 - Upload notes with metadata and file attachment
 - View all notes with uploader details
 - Search notes by title or subject
@@ -30,6 +31,8 @@ A full-stack mini project where students can register, login, upload notes, sear
 ### Authentication
 
 - POST /api/register
+- POST /api/verify-email
+- POST /api/resend-verification
 - POST /api/login
 
 ### Notes
@@ -51,10 +54,12 @@ npm run install-all
 
 - Copy `server/.env.example` to `server/.env`
 - Set values:
-  - `MONGO_URI=mongodb://localhost:27017/notes_sharing_platform`
+  - `MONGO_URI=mongodb://localhost:27017/notehub`
   - `JWT_SECRET=your_strong_secret`
   - `PORT=5000`
   - `CLIENT_URL=http://localhost:3000`
+  - `EMAIL_USER=your_gmail_address@gmail.com`
+  - `EMAIL_PASS=your_gmail_app_password`
 
 3. Configure frontend env:
 
@@ -93,4 +98,4 @@ npm run dev
 
 ## Viva Summary
 
-The Notes Sharing Platform is a MERN stack web application that enables students to register, login, upload notes in document format, search notes by subject or title, and download shared study materials. React handles the user interface, Node.js and Express provide the backend APIs, and MongoDB stores user and note metadata.
+NoteHub is a MERN stack web application that enables students to register, login, upload notes in document format, search notes by subject or title, and download shared study materials. React handles the user interface, Node.js and Express provide the backend APIs, and MongoDB stores user and note metadata.

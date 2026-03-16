@@ -10,6 +10,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
 const notesRoutes = require('./routes/notesRoutes');
+const bookmarkRoutes = require('./routes/bookmarkRoutes');
 
 const app = express();
 
@@ -27,9 +28,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api', authRoutes);
 app.use('/api', notesRoutes);
+app.use('/api', bookmarkRoutes);
 
 app.get('/api/health', (_req, res) => {
-  res.status(200).json({ status: 'ok', service: 'Notes Sharing API' });
+  res.status(200).json({ status: 'ok', service: 'NoteHub API' });
 });
 
 app.use((req, res) => {

@@ -17,7 +17,7 @@ function Navbar() {
       <div className="container topbar-inner">
         <Link className="brand" to={token ? '/dashboard' : '/'}>
           <FaBookOpen />
-          <span>Notes Sharing Platform</span>
+          <span>NoteHub</span>
         </Link>
 
         <nav className="nav-links">
@@ -45,6 +45,9 @@ function Navbar() {
               </Link>
               <Link className={location.pathname === '/notes' ? 'active' : ''} to="/notes">
                 Notes
+              </Link>
+              <Link className={location.pathname === '/bookmarks' ? 'active' : ''} to="/bookmarks">
+                Bookmarks
               </Link>
               <button className="logout-btn" onClick={logout} type="button">
                 <FaArrowRightFromBracket />

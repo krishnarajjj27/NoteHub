@@ -1,4 +1,12 @@
-import { FaFileArrowDown, FaFolderOpen, FaUserGraduate, FaCalendarDays } from 'react-icons/fa6';
+import {
+  FaFileArrowDown,
+  FaFolderOpen,
+  FaUserGraduate,
+  FaCalendarDays,
+  FaDownload,
+  FaBookmark,
+  FaRegBookmark,
+} from 'react-icons/fa6';
 
 function formatDate(value) {
   return new Date(value).toLocaleDateString(undefined, {
@@ -15,7 +23,7 @@ function readableSize(bytes) {
   return `${(kb / 1024).toFixed(1)} MB`;
 }
 
-function NoteCard({ note, onDownload }) {
+function NoteCard({ note, onDownload, onToggleBookmark, isBookmarked = false, bookmarkLoading = false }) {
   return (
     <article className="note-card">
       <div className="note-header">
@@ -35,11 +43,28 @@ function NoteCard({ note, onDownload }) {
         <span>
           <FaFolderOpen /> {readableSize(note.fileSize)}
         </span>
+        <span className="download-count">
+          <FaDownload /> Downloads: {note.downloadCount || 0}
+        </span>
       </div>
 
-      <button className="download-btn" onClick={() => onDownload(note._id, note.fileName)} type="button">
-        <FaFileArrowDown /> Download
-      </button>
+      <div className="note-actions">
+        {onToggleBookmark && (
+          <button
+            className={`bookmark-btn ${isBookmarked ? 'active' : ''}`}
+            onClick={() => onToggleBookmark(note._id)}
+            type="button"
+            disabled={bookmarkLoading}
+          >
+            {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+            {bookmarkLoading ? 'Saving...' : isBookmarked ? 'Saved' : 'Bookmark'}
+          </button>
+        )}
+
+        <button className="download-btn" onClick={() => onDownload(note._id, note.fileName)} type="button">
+          <FaFileArrowDown /> Download
+        </button>
+      </div>
     </article>
   );
 }

@@ -1,14 +1,39 @@
 import { useEffect, useMemo, useState } from 'react';
-import { FaMagnifyingGlass } from 'react-icons/fa6';
+import { FaMagnifyingGlass, FaArrowTrendUp, FaDownload } from 'react-icons/fa6';
 import Navbar from '../components/Navbar';
 import NoteCard from '../components/NoteCard';
 import api from '../api';
 
 function NotesList() {
   const [notes, setNotes] = useState([]);
+  const [bookmarkedNoteIds, setBookmarkedNoteIds] = useState(new Set());
+  const [bookmarkingNoteId, setBookmarkingNoteId] = useState('');
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  function getCurrentUserId() {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      return user.id || '';
+    } catch (_error) {
+      return '';
+    }
+  }
+
+  async function fetchBookmarks() {
+    const userId = getCurrentUserId();
+    if (!userId) {
+      return;
+    }
+
+    try {
+      const { data } = await api.get(`/bookmarks/${userId}`);
+      setBookmarkedNoteIds(new Set(data.bookmarkedNoteIds || []));
+    } catch (_requestError) {
+      setBookmarkedNoteIds(new Set());
+    }
+  }
 
   async function fetchAllNotes() {
     setLoading(true);
@@ -25,6 +50,7 @@ function NotesList() {
 
   useEffect(() => {
     fetchAllNotes();
+    fetchBookmarks();
   }, []);
 
   useEffect(() => {
@@ -52,10 +78,54 @@ function NotesList() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+
+      setNotes((previousNotes) =>
+        previousNotes.map((note) =>
+          note._id === noteId
+            ? { ...note, downloadCount: (note.downloadCount || 0) + 1 }
+            : note
+        )
+      );
     } catch (requestError) {
       setError(requestError.response?.data?.message || 'Download failed');
     }
   }
+
+  async function handleToggleBookmark(noteId) {
+    setBookmarkingNoteId(noteId);
+    setError('');
+
+    try {
+      const isBookmarked = bookmarkedNoteIds.has(noteId);
+      if (isBookmarked) {
+        await api.delete(`/bookmark/${noteId}`);
+        setBookmarkedNoteIds((previousIds) => {
+          const nextIds = new Set(previousIds);
+          nextIds.delete(noteId);
+          return nextIds;
+        });
+      } else {
+        await api.post('/bookmark', {
+          userId: getCurrentUserId(),
+          noteId,
+        });
+        setBookmarkedNoteIds((previousIds) => {
+          const nextIds = new Set(previousIds);
+          nextIds.add(noteId);
+          return nextIds;
+        });
+      }
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'Failed to update bookmark');
+    } finally {
+      setBookmarkingNoteId('');
+    }
+  }
+
+  const topDownloadedNotes = useMemo(
+    () => [...notes].sort((first, second) => (second.downloadCount || 0) - (first.downloadCount || 0)).slice(0, 3),
+    [notes]
+  );
 
   const emptyMessage = useMemo(() => {
     if (loading) return 'Loading notes...';
@@ -87,9 +157,40 @@ function NotesList() {
           {error && <p className="error-text">{error}</p>}
           {emptyMessage && <p className="helper-text">{emptyMessage}</p>}
 
+          {topDownloadedNotes.length > 0 && (
+            <section className="top-notes-panel" aria-label="Top downloaded notes">
+              <div className="top-notes-head">
+                <h3>
+                  <FaArrowTrendUp /> Top Downloaded Notes
+                </h3>
+              </div>
+              <div className="top-notes-list">
+                {topDownloadedNotes.map((note, index) => (
+                  <div key={note._id} className="top-note-item">
+                    <div className="top-note-rank">{index + 1}</div>
+                    <div className="top-note-copy">
+                      <p>{note.title}</p>
+                      <span>{note.subject}</span>
+                    </div>
+                    <div className="top-note-downloads">
+                      <FaDownload /> {note.downloadCount || 0}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
           <div className="notes-grid">
             {notes.map((note) => (
-              <NoteCard key={note._id} note={note} onDownload={handleDownload} />
+              <NoteCard
+                key={note._id}
+                note={note}
+                onDownload={handleDownload}
+                onToggleBookmark={handleToggleBookmark}
+                isBookmarked={bookmarkedNoteIds.has(note._id)}
+                bookmarkLoading={bookmarkingNoteId === note._id}
+              />
             ))}
           </div>
         </section>

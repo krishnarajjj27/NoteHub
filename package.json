@@ -1,8 +1,8 @@
 {
-  "name": "mern-notes-sharing-platform",
+  "name": "notehub",
   "version": "1.0.0",
   "private": true,
-  "description": "Full-stack Notes Sharing Platform using MERN",
+  "description": "NoteHub: Full-stack notes sharing platform using MERN",
   "scripts": {
     "install-all": "npm install && npm install --prefix server && npm install --prefix client",
     "dev": "concurrently \"npm run dev --prefix server\" \"npm start --prefix client\"",
