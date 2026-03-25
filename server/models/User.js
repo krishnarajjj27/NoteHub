@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      immutable: true,
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email'],
@@ -33,6 +34,35 @@ const userSchema = new mongoose.Schema(
     verificationCodeExpires: {
       type: Date,
       default: null,
+    },
+    profilePicture: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    bio: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 300,
+    },
+    collegeName: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 120,
+    },
+    courseDepartment: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 120,
+    },
+    yearSemester: {
+      type: String,
+      default: '',
+      trim: true,
+      maxlength: 60,
     },
   },
   {

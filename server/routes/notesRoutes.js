@@ -3,6 +3,9 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const Notes = require('../models/Notes');
+const DownloadHistory = require('../models/DownloadHistory');
+const PdfAnnotation = require('../models/PdfAnnotation');
+const PdfQuickNote = require('../models/PdfQuickNote');
 const authMiddleware = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -124,9 +127,126 @@ router.get('/download/:id', authMiddleware, async (req, res) => {
       $inc: { downloadCount: 1 },
     });
 
+    await DownloadHistory.create({
+      userId: req.user.id,
+      noteId: note._id,
+    });
+
     return res.download(absolutePath, note.fileName);
   } catch (error) {
     return res.status(500).json({ message: 'Download failed', error: error.message });
+  }
+});
+
+router.get('/notes/:id/annotations', authMiddleware, async (req, res) => {
+  try {
+    const note = await Notes.findById(req.params.id).select('_id mimeType fileUrl fileName');
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+
+    const [annotations, quickNote] = await Promise.all([
+      PdfAnnotation.find({
+        noteId: req.params.id,
+        userId: req.user.id,
+      })
+        .sort({ createdAt: -1 })
+        .lean(),
+      PdfQuickNote.findOne({ noteId: req.params.id, userId: req.user.id }).lean(),
+    ]);
+
+    return res.status(200).json({
+      note,
+      annotations,
+      quickNote: quickNote?.text || '',
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to fetch annotations', error: error.message });
+  }
+});
+
+router.post('/notes/:id/annotations', authMiddleware, async (req, res) => {
+  try {
+    const { comment, content, position } = req.body;
+
+    if (!content || !position) {
+      return res.status(400).json({ message: 'content and position are required' });
+    }
+
+    const note = await Notes.findById(req.params.id).select('_id');
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+
+    const annotation = await PdfAnnotation.create({
+      userId: req.user.id,
+      noteId: req.params.id,
+      comment: {
+        text: comment?.text ? String(comment.text).trim() : '',
+        emoji: comment?.emoji ? String(comment.emoji) : '',
+      },
+      content,
+      position,
+    });
+
+    return res.status(201).json({ annotation });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to save annotation', error: error.message });
+  }
+});
+
+router.delete('/annotations/:annotationId', authMiddleware, async (req, res) => {
+  try {
+    const annotation = await PdfAnnotation.findOneAndDelete({
+      _id: req.params.annotationId,
+      userId: req.user.id,
+    });
+
+    if (!annotation) {
+      return res.status(404).json({ message: 'Annotation not found' });
+    }
+
+    return res.status(200).json({ message: 'Annotation removed' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to delete annotation', error: error.message });
+  }
+});
+
+router.delete('/notes/:id/annotations', authMiddleware, async (req, res) => {
+  try {
+    await PdfAnnotation.deleteMany({
+      noteId: req.params.id,
+      userId: req.user.id,
+    });
+
+    return res.status(200).json({ message: 'All annotations removed' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to clear annotations', error: error.message });
+  }
+});
+
+router.put('/notes/:id/quick-note', authMiddleware, async (req, res) => {
+  try {
+    const text = String(req.body?.text || '').trim();
+
+    if (text.length > 2500) {
+      return res.status(400).json({ message: 'Quick note must be 2500 characters or less' });
+    }
+
+    const note = await Notes.findById(req.params.id).select('_id');
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+
+    const quickNote = await PdfQuickNote.findOneAndUpdate(
+      { userId: req.user.id, noteId: req.params.id },
+      { text },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    return res.status(200).json({ quickNote: quickNote.text, updatedAt: quickNote.updatedAt });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to save quick note', error: error.message });
   }
 });
 
